@@ -16,7 +16,7 @@ The main API Controller, GenericCrudController, exposes the 4 basic CRUD operati
 - Update (PUT)
 - Destroy (DELETE)
 
-Each request is made to the assigned collection's endpoint as ```<VERB> /<collection>{/<id>}```
+Each request is made to the assigned collection's endpoint as ```<VERB> /crud/<collection>{/<id>}```
 Note: the ```<id>``` is only for the GET, PUT and DELETE methods
 
 The API layer will then find the Manager for the specified collection and delegate the operation.
@@ -37,5 +37,5 @@ To add a new collection simply:
 
 And you are done! The ```GenericCrudController``` and Micronaut's dependency injection should take care of the rest.
 
-You may now call ```POST /<collection-name>/``` with a JSON representation of the resource you want to create
+You may now call ```POST /crud/<collection-name>/``` with a JSON representation of the resource you want to create
 and the controller should delegate the creation to your CrudManager
