@@ -23,7 +23,7 @@ public abstract class CrudManager<T> {
     public abstract T delete (String id);
     public abstract T patch (String id, JsonPatch patch);
 
-    public T applyPatch(T bean, JsonPatch patch){
+    protected T applyPatch(T bean, JsonPatch patch){
         JsonValue jsonBean = mapper.convertValue(bean, JsonValue.class);
         JsonValue patched = patch.apply(jsonBean.asJsonObject());
         Class<T> klazz = getManagedClass();
