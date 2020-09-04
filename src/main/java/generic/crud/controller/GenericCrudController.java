@@ -5,13 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import generic.crud.managers.Collection;
 import generic.crud.managers.CrudManager;
 import io.micronaut.core.beans.BeanIntrospection;
-import io.micronaut.core.convert.TypeConverter;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.json.JsonPatch;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +58,15 @@ public class GenericCrudController {
             return HttpResponse.ok(manager.post(mapper.readerFor(klazz).readValue(object)));
         }
         return HttpResponse.badRequest();
+    }
+
+    @Get("/{collection}")
+    public HttpResponse<List<?>> list(String collection){
+        CrudManager manager = this.managers.get(collection);
+        if(manager != null) {
+            return HttpResponse.ok(manager.list());
+        }
+        return HttpResponse.notFound();
     }
 
     @Get("/{collection}/{id}")

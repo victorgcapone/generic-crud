@@ -5,8 +5,11 @@ import io.micronaut.core.annotation.Introspected;
 
 import javax.inject.Singleton;
 import javax.json.JsonPatch;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Singleton
 @Introspected
@@ -50,5 +53,10 @@ public class UserCrudManager extends CrudManager<User> {
             return applyPatch(user, patch);
         }
         return null;
+    }
+
+    @Override
+    public List<User> list() {
+        return users.values().stream().collect(Collectors.toList());
     }
 }

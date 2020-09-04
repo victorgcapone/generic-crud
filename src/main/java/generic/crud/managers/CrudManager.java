@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.json.JsonPatch;
 import javax.json.JsonValue;
+import java.util.List;
 
 @Singleton
 public abstract class CrudManager<T> {
@@ -22,6 +23,7 @@ public abstract class CrudManager<T> {
     public abstract T put (String id, T update);
     public abstract T delete (String id);
     public abstract T patch (String id, JsonPatch patch);
+    public abstract List<T> list();
 
     protected T applyPatch(T bean, JsonPatch patch){
         JsonValue jsonBean = mapper.convertValue(bean, JsonValue.class);
