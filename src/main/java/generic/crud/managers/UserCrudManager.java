@@ -29,6 +29,12 @@ public class UserCrudManager extends CrudManager<User> {
 
     @Override
     public User put(String id, User update) {
+        User u = users.get(id);
+        if(users != null) {
+            update.setUuid(u.getUuid());
+            users.put(id, update);
+            return update;
+        }
         return null;
     }
 
