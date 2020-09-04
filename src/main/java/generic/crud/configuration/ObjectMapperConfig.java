@@ -1,4 +1,4 @@
-package generic.crud;
+package generic.crud.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -16,7 +16,7 @@ public class ObjectMapperConfig {
         SimpleModule customDeserializerModule = new SimpleModule();
         customDeserializerModule.addDeserializer(JsonPatch.class, deserializer);
         return new ObjectMapper()
-                .registerModule(customDeserializerModule)
+                .registerModule(customDeserializerModule) // Registers our custom deserializer for JSON Patches
                 .registerModule(new JSR353Module())
                 .findAndRegisterModules();
     }
