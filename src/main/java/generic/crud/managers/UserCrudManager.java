@@ -4,6 +4,7 @@ import generic.crud.entities.User;
 import io.micronaut.core.annotation.Introspected;
 
 import javax.inject.Singleton;
+import javax.json.JsonPatch;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -16,7 +17,8 @@ public class UserCrudManager extends CrudManager<User> {
 
     @Override
     public User post(User user) {
-        users.put(UUID.randomUUID().toString(), user);
+        user.setUuid(UUID.randomUUID().toString());
+        users.put(user.getUuid(), user);
         return user;
     }
 
@@ -33,5 +35,14 @@ public class UserCrudManager extends CrudManager<User> {
     @Override
     public User delete(String id) {
         return users.remove(id);
+    }
+
+    @Override
+    public User patch(String id, JsonPatch patch) {
+        User user = users.get(id);
+        if(user != null){
+            return applyPatch(user, patch);
+        }
+        return null;
     }
 }

@@ -4,13 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import generic.crud.managers.Collection;
 import generic.crud.managers.CrudManager;
-import io.micronaut.context.BeanContext;
 import io.micronaut.core.beans.BeanIntrospection;
+import io.micronaut.core.convert.TypeConverter;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.json.JsonPatch;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,9 +24,6 @@ public class GenericCrudController {
 
     @Inject
     protected ObjectMapper mapper;
-
-    @Inject
-    protected BeanContext context;
 
     /**
      * We use the init method to cache all the registered Crud Managers in a hash map
@@ -56,9 +55,9 @@ public class GenericCrudController {
     @Post("/{collection}")
     public HttpResponse<?> post(String collection, @Body String object) throws JsonProcessingException {
         CrudManager manager = this.managers.get(collection);
-        Class klazz = context.getBeanDefinition(manager.getClass()).getTypeParameters(CrudManager.class)[0];
+        Class klazz = manager.getManagedClass();
         if(manager != null){
-            manager.post(mapper.readerFor(klazz).readValue(object));
+            return HttpResponse.ok(manager.post(mapper.readerFor(klazz).readValue(object)));
         }
         return HttpResponse.badRequest();
     }
@@ -76,9 +75,19 @@ public class GenericCrudController {
     @Put("/{collection}/{id}")
     public HttpResponse<?> put(String collection, String id, @Body String object) throws JsonProcessingException {
         CrudManager manager = this.managers.get(collection);
-        Class klazz = context.getBeanDefinition(manager.getClass()).getTypeParameters(CrudManager.class)[0];
+        Class klazz = manager.getManagedClass();
         if(manager != null){
-            manager.put(id, mapper.readerFor(klazz).readValue(object));
+            return HttpResponse.ok(manager.put(id, mapper.readerFor(klazz).readValue(object)));
+        }
+        return HttpResponse.badRequest();
+    }
+
+    @Patch(value = "/{collection}/{id}", consumes = "application/json-patch+json")
+    public HttpResponse<?> patch(String collection, String id, @Body JsonPatch patch) {
+        CrudManager manager = this.managers.get(collection);
+        if(manager != null){
+            Object resource = manager.patch(id, patch);
+            return HttpResponse.ok(resource);
         }
         return HttpResponse.badRequest();
     }

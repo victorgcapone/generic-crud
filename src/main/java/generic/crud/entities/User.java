@@ -8,6 +8,10 @@ import lombok.Setter;
 @Setter
 public class User {
 
+    private String uuid;
+
     private String name;
+
+    private Float number;
 
 }
